@@ -1,4 +1,4 @@
-function [C, L, U] = SpectralClusteringExternal(W, k, Type, seed)
+function [C, L, U] = SpectralClusteringExternal(W, k, Type, seed, idx)
 %SPECTRALCLUSTERING Executes spectral clustering algorithm
 %   Executes the spectral clustering algorithm defined by
 %   Type on the adjacency matrix W and returns the k cluster
@@ -61,20 +61,23 @@ if Type == 3
 end
 
 
-centroid = zeros(10,10); 
+centroid = zeros(10,k); 
+num_iterations = 1000;
+cNearFinal = zeros(12000,num_iterations);
 
-for i = 1:10
-    centroid(i,:) = U(seed(i,2),:);
+for i = 1:num_iterations
+    i
+    for j = 1:10
+        topIndices = idx(:,randi(30));
+        seed_neighbors_indices = topIndices(seed(j,randi(3)),:);
+        seed_neighbors = U(seed_neighbors_indices(:),:);
+        centroid(j,:) = mean(seed_neighbors,1);
+    end
+    [c1,centers] = kmeans(U, k, 'Start',centroid,'MaxIter',10000);
+    cNearFinal(:,i) = c1 - 1;
 end
 
+C = mode(cNearFinal,2);
 
-% now use the k-means algorithm to cluster U row-wise
-% C will be a n-by-1 matrix containing the cluster number for
-% each data point
-C = kmeans(U, k, 'Start',centroid);
-             
-% now convert C to a n-by-k matrix containing the k indicator
-% vectors as columns
-% C = sparse(1:size(D, 1), C, 1);
 
 end
