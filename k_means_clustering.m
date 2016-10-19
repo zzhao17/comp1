@@ -5,7 +5,7 @@ pairwise_distances = squareform(pdist(data).^2);
 
 [sorted_dist,idx] = sort(pairwise_distances,2);
 
-num_iterations = 1000;
+num_iterations = 10;
 centroid = zeros(10,size(data,2));
 cNearFinal = zeros(12000,num_iterations);
 
@@ -24,14 +24,5 @@ cfinal = mode(cNearFinal,2);
 cfinal = [linspace(1,12000,12000)' cfinal];
 csvwrite('simple_k_means.csv',cfinal);
 
-truth = repmat([0 1 2 3 4 5 6 7 8 9],1,3)';
-seedpoints = cfinal(seed(:),2)
-accuracy = 0;
+check_accuracy_with_seeds(cfinal,seed)
 
-for i = 1:30
-   if seedpoints(i) == truth(i)
-       accuracy = accuracy + 1;
-   end
-end
-
-accuracy
