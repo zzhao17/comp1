@@ -5,7 +5,6 @@ function [afterpca] = pca1()
 data = csvread('features.csv');
 dim = 10;
 [M,N] = size(data); 
-a = zeros(M,N);
 % subtract off the mean for each dimension 
 mn = mean(data,2); 
 data = data - repmat(mn,1,N);
@@ -15,7 +14,7 @@ for i = 1:1:N
     data (:,i) = sqrt( 1/ (var(:,i)) ) * data(:,i);
 end
 % calculate the covariance matrix 
-covariance = cov(a);
+covariance = cov(data);
 % find the eigenvectors and eigenvalues 
 [envec, enval] = eig(covariance);
 v = diag(enval);
